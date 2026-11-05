@@ -1,6 +1,6 @@
 ---
 name: freellmapi-proxy
-description: OpenAI-compatible proxy aggregating 14 free-tier LLM providers with automatic failover and per-key rate tracking.
+description: Self-hosted OpenAI/Anthropic-compatible proxy aggregating ~34 free-tier LLM providers (plus custom endpoints) with automatic failover and per-key rate tracking.
 triggers:
   - set up freellmapi proxy
   - aggregate free LLM providers
@@ -16,13 +16,23 @@ triggers:
 
 > Skill by [ara.so](https://ara.so) — Daily 2026 Skills collection.
 
-FreeLLMAPI is a self-hosted OpenAI-compatible proxy that aggregates free-tier API keys from ~14 AI providers (Google, Groq, Cerebras, SambaNova, NVIDIA, Mistral, OpenRouter, GitHub Models, Hugging Face, Cohere, Cloudflare, Zhipu, Moonshot, MiniMax) behind a single `/v1/chat/completions` endpoint. It handles automatic failover on 429/5xx, per-key rate tracking, sticky sessions for multi-turn conversations, and AES-256-GCM encrypted key storage.
+FreeLLMAPI is a self-hosted proxy that aggregates free-tier API keys from ~34 AI providers (Google, Groq, Cerebras, OpenCode Zen, Mistral, OpenRouter, Cloudflare, Cohere, Z.ai/Zhipu, NVIDIA, Hugging Face, ModelScope and ~20 more) plus any custom OpenAI-compatible endpoint (llama.cpp, LM Studio, vLLM, Ollama) behind one `/v1` API. It handles automatic failover on 429/5xx, per-key rate tracking, sticky sessions for multi-turn conversations, AES-256-GCM encrypted key storage, and a model catalog that updates itself from a signed feed.
+
+> Last checked against upstream `tashfeenahmed/freellmapi` in November 2026. The project moves fast: when in doubt, check its README and `docs/en/` rather than this file.
 
 ---
 
 ## Installation
 
-**Prerequisites:** Node.js 20+, npm.
+**Docker one-liner** (sets up `~/freellmapi`, generates an encryption key, pulls the image and starts the container on :3001):
+
+```bash
+curl -fsSL https://freellmapi.co/install.sh | bash
+```
+
+A desktop app (macOS `.dmg`, Windows `.exe`) is also published on the GitHub Releases page.
+
+**From source** — prerequisites: Node.js >= 20.18 and < 25, npm 10+.
 
 ```bash
 git clone https://github.com/tashfeenahmed/freellmapi.git
@@ -47,10 +57,15 @@ node server/dist/index.js   # serves API + dashboard on :3001
 
 ```bash
 # .env
-ENCRYPTION_KEY=<64-char hex string>   # Required — AES-256 key for provider key storage
+ENCRYPTION_KEY=<64-char hex string>   # Required in production; outside production it is auto-generated into server/data/.encryption-key
 PORT=3001                              # Optional — defaults to 3001
+HOST=::                                # Optional — bind address (127.0.0.1 for localhost only)
 NODE_ENV=production                    # Optional
+FREEAPI_DB_PATH=...                    # Optional — SQLite location (default server/data/freellmapi.db)
+FREEAPI_CONFIG_JSON=... / FREEAPI_CONFIG_PATH=...  # Optional — declarative startup config (see below)
 ```
+
+`.env.example` documents many more knobs (outbound proxy, timeouts, response cache, prompt compression, guardrails, retention).
 
 Never commit `.env`. The `ENCRYPTION_KEY` protects all stored provider API keys.
 
@@ -67,7 +82,9 @@ npm run test       # Run test suite
 
 ---
 
-## Provider Setup
+## First Run & Provider Setup
+
+The dashboard is login-gated. The first account is created through the dashboard on first visit (from another device, a one-time setup code printed in the server logs is also required).
 
 1. Open the dashboard at `http://localhost:5173` (dev) or `http://localhost:3001` (prod).
 2. Navigate to **Keys** page.
@@ -94,7 +111,51 @@ npm run test       # Run test suite
 | Moonshot | https://platform.moonshot.cn |
 | MiniMax | https://platform.minimax.io |
 
+…and ~20 more. A **custom** provider can point chat, embedding, image or audio models at any OpenAI-compatible endpoint from the Keys page. The always-current list, with per-model limits, is at https://freellmapi.co/models.html.
+
+### Declarative startup config (headless installs)
+
+Instead of clicking through the dashboard, an admin account, provider keys and routing strategy can be applied on every boot (idempotent, before the HTTP listener starts):
+
+```bash
+FREEAPI_CONFIG_JSON='{"admin":{"email":"ops@example.com","password":"change-me"},"keys":[{"platform":"groq","key":"gsk_...","label":"main"}],"routing":{"strategy":"balanced"}}'
+```
+
+The JSON holds plaintext secrets: protect it like `ENCRYPTION_KEY`.
+
+### Coding agents
+
+Most agents configure themselves from the live catalog with one command, e.g. Claude Code:
+
+```bash
+npx freellmapi setup-claude --url http://localhost:3001 --api-key <unified-key>
+```
+
+Codex CLI, Gemini CLI, Cursor, Cline, Roo Code, OpenCode, Aider and others are supported too (see upstream `docs/en/clients/02-supported-agents.md`).
+
 ---
+
+## API Surfaces
+
+All behind the same unified bearer key and router:
+
+| Endpoint | Purpose |
+|---|---|
+| `/v1/chat/completions` | OpenAI chat (streaming + non-streaming, tools, `response_format`) |
+| `/v1/responses` | OpenAI Responses API (used by Codex CLI) |
+| `/v1/completions` | Legacy completions (editor autocomplete) |
+| `/v1/messages`, `/v1/messages/count_tokens` | Anthropic Messages API — Claude Code / Anthropic SDKs |
+| `/v1beta/...` | Native Gemini API (`generateContent`, streaming, token count) |
+| `/v1/embeddings` | Embeddings |
+| `/v1/images/generations`, `/v1/videos/generations` | Image / video generation |
+| `/v1/audio/speech`, `/v1/audio/transcriptions` | Text-to-speech / speech-to-text |
+| `/v1/models` | Model list (`auto`, `auto:<profile>`, `fusion` are virtual models) |
+| `/mcp` | MCP server (inference, model list, health, routing) |
+| `/v1/docs`, `/v1/openapi.json` | Interactive API docs |
+
+Opt-in Ollama emulation (`/api/*`) is also available for Zed, JetBrains, etc.
+
+Special model names: `auto` (router picks), `auto:<profile>` (a named fallback chain, e.g. `auto:coding`), `fusion` (fans the prompt out to several free models and has a judge synthesize one answer).
 
 ## Using the API
 
@@ -499,12 +560,13 @@ Register in `server/src/providers/index.ts` and add rate limit caps to the route
 
 ## Limitations
 
-- Text-only — no vision/multimodal inputs
-- No embeddings (`/v1/embeddings`)
-- No image generation (`/v1/images/*`)
-- No audio/speech (`/v1/audio/*`)
-- No legacy completions (`/v1/completions`)
-- No moderation (`/v1/moderations`)
-- `n > 1` not supported (single completion per request)
-- Single-user by design — no per-user billing or multi-tenant auth
+Not supported:
+- Moderation (`/v1/moderations`)
+- `n > 1` (single completion per request)
+- Per-user billing / multi-tenant auth — single-user by design
+
+Trade-offs of stacking free tiers:
+- No frontier models, variable latency, no SLA
+- Effective quality dips late in the day as top models hit daily caps, then resets at UTC midnight
+- Free installs get new catalog models ~30 days after the live feed (paid "premium" gets them same-day)
 - Personal/experimental use only — review each provider's ToS before production use
