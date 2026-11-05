@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "freellmapi-proxy": {
+      "source": "aradotso/trending-skills",
+      "sourceType": "github",
+      "skillPath": "skills/freellmapi-proxy/SKILL.md",
+      "computedHash": "a5363df084ad56c5046c75cb8ddbb9a91c52f835ebff8d7094808637a769bac8"
+    }
+  }
+}
