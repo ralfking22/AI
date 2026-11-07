@@ -1,0 +1,151 @@
+{%- liquid
+  assign rd_show = true
+  if section.settings.show_on != blank and collection
+    assign rd_handles = section.settings.show_on | remove: ' ' | split: ','
+    unless rd_handles contains collection.handle
+      assign rd_show = false
+    endunless
+  endif
+-%}
+{%- if rd_show -%}
+{%- style -%}
+  #tiles-{{ section.id }} {
+    padding: 5.6rem 0;
+  }
+  #tiles-{{ section.id }} .tiles__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 3.2rem;
+  }
+  #tiles-{{ section.id }} .tiles__head h2 {
+    margin: 0;
+  }
+  #tiles-{{ section.id }} .tiles__grid {
+    display: grid;
+    gap: 1.6rem;
+    grid-template-columns: 1fr;
+  }
+  #tiles-{{ section.id }} .tile {
+    position: relative;
+    display: block;
+    border-radius: 2rem;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    background: var(--rd-mist);
+    color: #fff;
+    text-decoration: none;
+  }
+  #tiles-{{ section.id }} .tile img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+  }
+  #tiles-{{ section.id }} .tile:hover img {
+    transform: scale(1.05);
+  }
+  #tiles-{{ section.id }} .tile::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0, 31, 84, 0) 35%, rgba(0, 31, 84, 0.88) 100%);
+  }
+  #tiles-{{ section.id }} .tile__body {
+    position: absolute;
+    left: 2.4rem;
+    right: 2.4rem;
+    bottom: 2.4rem;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.6rem;
+  }
+  #tiles-{{ section.id }} .tile__title {
+    color: #fff;
+    margin: 0 0 0.4rem;
+    font-size: 2.4rem;
+  }
+  #tiles-{{ section.id }} .tile__text {
+    margin: 0;
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  #tiles-{{ section.id }} .tile__arrow {
+    flex: none;
+    width: 4.4rem;
+    height: 4.4rem;
+    border-radius: 50%;
+    background: var(--rd-ball);
+    color: var(--rd-navy);
+    display: grid;
+    place-items: center;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  @media screen and (min-width: 750px) {
+    #tiles-{{ section.id }} {
+      padding: 8rem 0;
+    }
+    #tiles-{{ section.id }} .tiles__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.4rem;
+    }
+    #tiles-{{ section.id }} .tile {
+      aspect-ratio: 3 / 4;
+    }
+  }
+{%- endstyle -%}
+
+<section id="tiles-{{ section.id }}" class="category-tiles">
+  <div class="page-width">
+    <div class="tiles__head">
+      <h2 class="h1">{{ section.settings.heading | escape }}</h2>
+    </div>
+    <div class="tiles__grid">
+      {%- for block in section.blocks -%}
+        {%- assign c = block.settings.collection -%}
+        <a href="{{ c.url | default: '/collections/all' }}" class="tile" {{ block.shopify_attributes }}>
+          {%- assign img = block.settings.image | default: c.featured_image -%}
+          {%- if img != blank -%}
+            {{ img | image_url: width: 900 | image_tag: widths: '400, 600, 900', sizes: '(min-width: 750px) 33vw, 100vw', loading: 'lazy', alt: block.settings.title }}
+          {%- endif -%}
+          <span class="tile__body">
+            <span>
+              <h3 class="tile__title">{{ block.settings.title | escape }}</h3>
+              <p class="tile__text">{{ block.settings.text | escape }}</p>
+            </span>
+            <span class="tile__arrow" aria-hidden="true">→</span>
+          </span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{%- endif -%}
+{% schema %}
+{
+  "name": "Tuiles catégories",
+  "tag": "div",
+  "class": "section",
+  "settings": [{ "type": "text", "id": "heading", "label": "Titre", "default": "Acheter par catégorie" }, { "type": "text", "id": "show_on", "label": "On collection pages, show only on (handles, comma-separated)" }],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Catégorie",
+      "limit": 4,
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "title", "label": "Titre" },
+        { "type": "text", "id": "text", "label": "Texte" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Tuiles catégories" }]
+}
+{% endschema %}

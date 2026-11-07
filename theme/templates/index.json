@@ -1,0 +1,263 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "hero-split",
+      "blocks": {
+        "p1": {
+          "type": "perk",
+          "settings": {
+            "text": "Free shipping over $99.99 CAD"
+          }
+        },
+        "p2": {
+          "type": "perk",
+          "settings": {
+            "text": "30-day returns"
+          }
+        },
+        "p3": {
+          "type": "perk",
+          "settings": {
+            "text": "Ships worldwide"
+          }
+        }
+      },
+      "block_order": [
+        "p1",
+        "p2",
+        "p3"
+      ],
+      "settings": {
+        "image": "shopify://shop_images/Striking-premium-lifestyle-brand-photogr.png",
+        "eyebrow": "Rackets · Grips · Bags",
+        "heading": "Built for the <em>next point.</em>",
+        "text": "Carbon padel rackets, grips and bags for players who take their game seriously.",
+        "button_label_1": "Shop rackets",
+        "button_link_1": "shopify://collections/padel-rackets",
+        "button_label_2": "Shop all",
+        "button_link_2": "shopify://collections/all"
+      }
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "t1": {
+          "type": "item",
+          "settings": {
+            "icon": "local_shipping",
+            "title": "Worldwide shipping",
+            "text": "Free over $99.99 CAD. Delivered in 1–2 weeks with tracking.",
+            "link": "shopify://policies/shipping-policy"
+          }
+        },
+        "t2": {
+          "type": "item",
+          "settings": {
+            "icon": "autorenew",
+            "title": "30-day returns",
+            "text": "Faulty item? Free replacement or full refund.",
+            "link": "shopify://policies/refund-policy"
+          }
+        },
+        "t3": {
+          "type": "item",
+          "settings": {
+            "icon": "lock",
+            "title": "Secure checkout",
+            "text": "Encrypted payment powered by Shopify.",
+            "link": ""
+          }
+        },
+        "t4": {
+          "type": "item",
+          "settings": {
+            "icon": "chat",
+            "title": "Expert advice",
+            "text": "Not sure which racket? Ask us on live chat.",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "t1",
+        "t2",
+        "t3",
+        "t4"
+      ],
+      "settings": {}
+    },
+    "finder": {
+      "type": "racket-finder",
+      "blocks": {
+        "r1": {
+          "type": "racket",
+          "settings": {
+            "product": "arronax-at10-18k-padel-racket",
+            "badge": "Control",
+            "best_for": "Intermediate to advanced all-round players who value precision.",
+            "shape": "Round",
+            "weight": "372 g",
+            "face": "18K carbon"
+          }
+        },
+        "r2": {
+          "type": "racket",
+          "settings": {
+            "product": "legendsports-full-carbon-padel-racket",
+            "badge": "Power",
+            "best_for": "Attacking players chasing explosive shots and extra spin.",
+            "shape": "Teardrop",
+            "weight": "360 g ± 10 g",
+            "face": "Raw 18K carbon"
+          }
+        },
+        "r3": {
+          "type": "racket",
+          "settings": {
+            "product": "prime-carbon-eb-padel-racket",
+            "badge": "Power",
+            "best_for": "Offensive players who want punch and comfort. Cover included.",
+            "shape": "—",
+            "weight": "360 g ± 10 g",
+            "face": "Carbon fibre"
+          }
+        }
+      },
+      "block_order": [
+        "r1",
+        "r2",
+        "r3"
+      ],
+      "settings": {
+        "heading": "Find the racket that fits your game",
+        "text": "Three carbon rackets, three profiles. Compare shape, weight and face at a glance."
+      }
+    },
+    "tiles": {
+      "type": "category-tiles",
+      "blocks": {
+        "c1": {
+          "type": "tile",
+          "settings": {
+            "collection": "padel-rackets",
+            "image": "shopify://shop_images/hf_20260906_140218_48210765-5ed6-40ad-9056-28706bb2e6ce.png",
+            "title": "Rackets",
+            "text": "18K carbon, for every style of play."
+          }
+        },
+        "c2": {
+          "type": "tile",
+          "settings": {
+            "collection": "accessories",
+            "image": "shopify://shop_images/hf_20261008_214119_df52eb6f-1db8-4640-8564-1c5865fe8107.png",
+            "title": "Overgrips",
+            "text": "10-pack, 11 colours, always a dry grip."
+          }
+        },
+        "c3": {
+          "type": "tile",
+          "settings": {
+            "collection": "bags-backpacks",
+            "image": "shopify://shop_images/hf_20260906_140931_2f042195-138f-4246-92a0-71d62ce0462d.png",
+            "title": "Bags",
+            "text": "Room for your racket, shoes and the rest."
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "settings": {
+        "heading": "Shop by category"
+      }
+    },
+    "story": {
+      "type": "brand-story",
+      "blocks": {
+        "s1": {
+          "type": "pillar",
+          "settings": {
+            "title": "A short range",
+            "text": "Only models we can genuinely recommend."
+          }
+        },
+        "s2": {
+          "type": "pillar",
+          "settings": {
+            "title": "Clear specs",
+            "text": "Shape, weight, face: everything you need to choose."
+          }
+        },
+        "s3": {
+          "type": "pillar",
+          "settings": {
+            "title": "Honest advice",
+            "text": "Questions? We answer on chat or by email."
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3"
+      ],
+      "settings": {
+        "eyebrow": "Our story",
+        "heading": "Fewer products. Better choices.",
+        "text": "<p>Padel is winning players all over the world, but good gear is still hard to find. We started this store to change that: carefully chosen rackets, grips and bags, shipped worldwide.</p>"
+      }
+    },
+    "newsletter_94GBg4": {
+      "type": "newsletter",
+      "blocks": {
+        "heading_fYpHbj": {
+          "type": "heading",
+          "settings": {
+            "heading": "Stay in the game",
+            "heading_size": "h1"
+          }
+        },
+        "paragraph_QbpEP8": {
+          "type": "paragraph",
+          "settings": {
+            "text": "<p>New arrivals, playing tips and subscriber-only offers. No spam.</p>"
+          }
+        },
+        "email_form_LnhkKf": {
+          "type": "email_form",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "heading_fYpHbj",
+        "paragraph_QbpEP8",
+        "email_form_LnhkKf"
+      ],
+      "settings": {
+        "color_scheme": "scheme-2",
+        "full_width": true,
+        "padding_top": 80,
+        "padding_bottom": 80
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "trust",
+    "finder",
+    "tiles",
+    "story",
+    "newsletter_94GBg4"
+  ]
+}

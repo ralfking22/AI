@@ -1,0 +1,123 @@
+{%- style -%}
+  #story-{{ section.id }} {
+    background: var(--rd-navy);
+    color: #fff;
+    padding: 6.4rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  #story-{{ section.id }}::before {
+    content: '';
+    position: absolute;
+    width: 46rem;
+    height: 46rem;
+    border-radius: 50%;
+    border: 0.2rem solid rgba(228, 255, 58, 0.25);
+    right: -16rem;
+    top: -16rem;
+  }
+  #story-{{ section.id }} .story__inner {
+    display: grid;
+    gap: 3.2rem;
+    position: relative;
+  }
+  #story-{{ section.id }} .story__eyebrow {
+    color: var(--rd-ball);
+    font-size: 1.3rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin: 0 0 1.2rem;
+  }
+  #story-{{ section.id }} h2 {
+    color: #fff;
+    margin: 0;
+    font-size: clamp(3rem, 5vw, 4.8rem);
+    line-height: 1.1;
+  }
+  #story-{{ section.id }} .story__text {
+    font-size: 1.7rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.82);
+  }
+  #story-{{ section.id }} .story__pillars {
+    display: grid;
+    gap: 1.6rem;
+    margin: 2.4rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  #story-{{ section.id }} .story__pillars li {
+    border-left: 0.3rem solid var(--rd-ball);
+    padding-left: 1.6rem;
+  }
+  #story-{{ section.id }} .story__pillars strong {
+    display: block;
+    color: #fff;
+    font-size: 1.6rem;
+  }
+  #story-{{ section.id }} .story__pillars span {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  @media screen and (min-width: 990px) {
+    #story-{{ section.id }} {
+      padding: 9.6rem 0;
+    }
+    #story-{{ section.id }} .story__inner {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 8rem;
+      align-items: start;
+    }
+    #story-{{ section.id }} .story__pillars {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+{%- endstyle -%}
+
+<section id="story-{{ section.id }}" class="brand-story">
+  <div class="page-width story__inner">
+    <div>
+      <p class="story__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      <h2>{{ section.settings.heading | escape }}</h2>
+    </div>
+    <div>
+      <div class="story__text">{{ section.settings.text }}</div>
+      {%- if section.blocks.size > 0 -%}
+        <ul class="story__pillars">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <strong>{{ block.settings.title | escape }}</strong>
+              <span>{{ block.settings.text | escape }}</span>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Notre histoire",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Notre histoire" },
+    { "type": "text", "id": "heading", "label": "Titre", "default": "Moins de produits, de meilleurs choix." },
+    { "type": "richtext", "id": "text", "label": "Texte" }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Engagement",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre" },
+        { "type": "text", "id": "text", "label": "Texte" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Notre histoire" }]
+}
+{% endschema %}

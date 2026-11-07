@@ -1,0 +1,231 @@
+{%- style -%}
+  #chero-{{ section.id }} {
+    background: var(--rd-navy);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  #chero-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    width: 38rem;
+    height: 38rem;
+    border-radius: 50%;
+    border: 0.2rem solid rgba(228, 255, 58, 0.3);
+    right: -12rem;
+    bottom: -20rem;
+  }
+  #chero-{{ section.id }} .chero__inner {
+    position: relative;
+    z-index: 1;
+    padding-top: 3.2rem;
+    padding-bottom: 4rem;
+    display: grid;
+    gap: 3.2rem;
+    align-items: center;
+  }
+  #chero-{{ section.id }} .chero__media {
+    display: none;
+  }
+  #chero-{{ section.id }} .chero__media img {
+    display: block;
+    width: 100%;
+    height: 36rem;
+    object-fit: cover;
+    object-position: center 30%;
+    border-radius: 2rem;
+  }
+  #chero-{{ section.id }} .chero__stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.4rem;
+    margin: 2.8rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  #chero-{{ section.id }} .chero__stats li {
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  #chero-{{ section.id }} .chero__stats strong {
+    display: block;
+    color: var(--rd-ball);
+    font-size: 2rem;
+  }
+  #chero-{{ section.id }} .chero__crumbs {
+    font-size: 1.3rem;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0 0 1.6rem;
+  }
+  #chero-{{ section.id }} .chero__crumbs a {
+    color: inherit;
+    text-decoration: none;
+  }
+  #chero-{{ section.id }} .chero__crumbs a:hover {
+    color: var(--rd-ball);
+  }
+  #chero-{{ section.id }} h1 {
+    color: #fff;
+    margin: 0;
+    font-size: clamp(3.2rem, 6vw, 5.6rem);
+    line-height: 1.05;
+  }
+  #chero-{{ section.id }} .chero__count {
+    display: inline-block;
+    margin-top: 1.2rem;
+    font-size: 1.3rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rd-ball);
+    font-weight: 600;
+  }
+  #chero-{{ section.id }} .chero__desc {
+    max-width: 60rem;
+    margin: 1.6rem 0 0;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.6rem;
+    line-height: 1.6;
+  }
+  #chero-{{ section.id }} .chero__desc p {
+    margin: 0;
+  }
+  #chero-{{ section.id }} .chero__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin: 2.8rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  #chero-{{ section.id }} .chero__pills a {
+    display: inline-block;
+    padding: 0.9rem 1.8rem;
+    border-radius: 99rem;
+    border: 0.1rem solid rgba(255, 255, 255, 0.35);
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  #chero-{{ section.id }} .chero__pills a:hover,
+  #chero-{{ section.id }} .chero__pills a[aria-current='page'] {
+    background: var(--rd-ball);
+    border-color: var(--rd-ball);
+    color: var(--rd-navy);
+  }
+  @media screen and (min-width: 750px) {
+    #chero-{{ section.id }} .chero__inner {
+      padding-top: 4.8rem;
+      padding-bottom: 5.6rem;
+    }
+  }
+  @media screen and (min-width: 990px) {
+    #chero-{{ section.id }} .chero__inner.chero__inner--media {
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 6.4rem;
+    }
+    #chero-{{ section.id }} .chero__media {
+      display: block;
+    }
+  }
+{%- endstyle -%}
+
+<div id="chero-{{ section.id }}" class="collection-hero-rd">
+  {%- liquid
+  assign is_all = false
+  if collection.handle == 'all'
+    assign is_all = true
+  endif
+  assign hero_title = collection.title
+  if is_all and section.settings.all_title != blank
+    assign hero_title = section.settings.all_title
+  endif
+  assign hero_image = collection.image | default: section.settings.image
+-%}
+  <div class="page-width chero__inner{% if hero_image != blank %} chero__inner--media{% endif %}">
+    <div class="chero__content">
+    <nav class="chero__crumbs" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a> /
+      <a href="{{ routes.all_products_collection_url }}">Shop</a>
+      {%- if collection.handle != 'all' %} / <span aria-current="page">{{ collection.title | escape }}</span>{% endif %}
+    </nav>
+    <h1>{{ hero_title | escape }}</h1>
+    <span class="chero__count">
+      {{- collection.all_products_count }}
+      {% if collection.all_products_count == 1 %}product{% else %}products{% endif -%}
+    </span>
+    {%- if is_all and section.settings.all_text != blank -%}
+      <div class="chero__desc"><p>{{ section.settings.all_text | escape }}</p></div>
+    {%- elsif collection.description != blank -%}
+      <div class="chero__desc">{{ collection.description }}</div>
+    {%- endif -%}
+    {%- if section.settings.menu != blank -%}
+      <ul class="chero__pills">
+        {%- for link in section.settings.menu.links -%}
+          <li>
+            <a href="{{ link.url }}" {% if link.current %}aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      <ul class="chero__pills">
+        <li><a href="{{ routes.all_products_collection_url }}" {% if collection.handle == 'all' %}aria-current="page"{% endif %}>All</a></li>
+        {%- for c in collections -%}
+          {%- if c.all_products_count > 0 and c.handle != 'frontpage' and c.handle != 'all' -%}
+            <li><a href="{{ c.url }}" {% if c.handle == collection.handle %}aria-current="page"{% endif %}>{{ c.title | escape }}</a></li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      <ul class="chero__stats">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}><strong>{{ block.settings.value | escape }}</strong>{{ block.settings.label | escape }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+    </div>
+    {%- if hero_image != blank -%}
+      <div class="chero__media">
+        {{ hero_image | image_url: width: 1000 | image_tag: widths: '500, 750, 1000', sizes: '40vw', loading: 'eager', alt: hero_title }}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": {{ shop.url | json }} },
+      { "@type": "ListItem", "position": 2, "name": {{ collection.title | json }}, "item": {{ shop.url | append: collection.url | json }} }
+    ]
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection header",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    { "type": "link_list", "id": "menu", "label": "Quick links (leave empty to list collections)" },
+    { "type": "image_picker", "id": "image", "label": "Image (used when the collection has none)" },
+    { "type": "text", "id": "all_title", "label": "Title on the Shop all page", "default": "Shop all padel gear" },
+    { "type": "text", "id": "all_text", "label": "Text on the Shop all page" }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Highlight",
+      "limit": 3,
+      "settings": [
+        { "type": "text", "id": "value", "label": "Value", "default": "30 days" },
+        { "type": "text", "id": "label", "label": "Label", "default": "to return" }
+      ]
+    }
+  ]
+}
+{% endschema %}

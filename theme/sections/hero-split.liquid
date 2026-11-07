@@ -1,0 +1,204 @@
+{%- style -%}
+  #hero-{{ section.id }} {
+    background: var(--rd-navy);
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+  }
+  #hero-{{ section.id }} .hero-split__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3.2rem;
+    align-items: center;
+    padding-top: 1.6rem;
+    padding-bottom: 4.8rem;
+  }
+  #hero-{{ section.id }} .hero-split__media {
+    position: relative;
+    order: -1;
+  }
+  #hero-{{ section.id }} .hero-split__media img {
+    display: block;
+    width: 100%;
+    height: 32rem;
+    object-fit: cover;
+    object-position: center 30%;
+    border-radius: 2rem;
+  }
+  #hero-{{ section.id }} .hero-split__ball {
+    position: absolute;
+    width: 7rem;
+    height: 7rem;
+    border-radius: 50%;
+    background: var(--rd-ball);
+    right: 1.6rem;
+    bottom: -2.4rem;
+    box-shadow: 0 1.2rem 3rem rgba(0, 0, 0, 0.35);
+  }
+  #hero-{{ section.id }} .hero-split__ball::before,
+  #hero-{{ section.id }} .hero-split__ball::after {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+    border: 0.3rem solid rgba(255, 255, 255, 0.9);
+    clip-path: polygon(0 0, 45% 0, 45% 100%, 0 100%);
+  }
+  #hero-{{ section.id }} .hero-split__ball::after {
+    transform: scaleX(-1);
+  }
+  #hero-{{ section.id }} .hero-split__eyebrow {
+    display: inline-flex;
+    gap: 0.8rem;
+    align-items: center;
+    font-size: 1.3rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--rd-ball);
+    margin: 0 0 1.6rem;
+    font-weight: 600;
+  }
+  #hero-{{ section.id }} .hero-split__eyebrow::before {
+    content: '';
+    width: 2.4rem;
+    height: 0.2rem;
+    background: var(--rd-ball);
+  }
+  #hero-{{ section.id }} h1 {
+    color: #fff;
+    font-size: clamp(3.8rem, 9vw, 7.2rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    margin: 0 0 2rem;
+  }
+  #hero-{{ section.id }} h1 em {
+    font-style: normal;
+    color: var(--rd-ball);
+  }
+  #hero-{{ section.id }} .hero-split__text {
+    font-size: 1.7rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 48rem;
+    margin: 0 0 3.2rem;
+  }
+  #hero-{{ section.id }} .hero-split__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+  }
+  #hero-{{ section.id }} .hero-split__perks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 2.4rem;
+    margin: 3.2rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 1.4rem;
+    color: rgba(255, 255, 255, 0.75);
+  }
+  #hero-{{ section.id }} .hero-split__perks li::before {
+    content: '✓';
+    color: var(--rd-ball);
+    font-weight: 700;
+    margin-right: 0.8rem;
+  }
+  @media screen and (min-width: 990px) {
+    #hero-{{ section.id }} .hero-split__inner {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 6.4rem;
+      padding-top: 7.2rem;
+      padding-bottom: 8.8rem;
+    }
+    #hero-{{ section.id }} .hero-split__media {
+      order: 0;
+    }
+    #hero-{{ section.id }} .hero-split__media img {
+      height: 60rem;
+    }
+    #hero-{{ section.id }} .hero-split__ball {
+      width: 12rem;
+      height: 12rem;
+      left: -4rem;
+      right: auto;
+      bottom: 4rem;
+    }
+  }
+{%- endstyle -%}
+
+<section id="hero-{{ section.id }}" class="hero-split">
+  <div class="page-width hero-split__inner">
+    <div class="hero-split__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="hero-split__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1>{{ section.settings.heading }}</h1>
+      {%- if section.settings.text != blank -%}
+        <p class="hero-split__text">{{ section.settings.text | escape }}</p>
+      {%- endif -%}
+      <div class="hero-split__buttons">
+        {%- if section.settings.button_label_1 != blank -%}
+          <a href="{{ section.settings.button_link_1 | default: '/collections/all' }}" class="button rd-button--ball">
+            {{- section.settings.button_label_1 | escape -}}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.button_label_2 != blank -%}
+          <a href="{{ section.settings.button_link_2 | default: '/collections/all' }}" class="button rd-button--ghost">
+            {{- section.settings.button_label_2 | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+      {%- if section.blocks.size > 0 -%}
+        <ul class="hero-split__perks">
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>{{ block.settings.text | escape }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+    <div class="hero-split__media">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1400
+          | image_tag:
+            widths: '450, 650, 900, 1100, 1400',
+            sizes: '(min-width: 990px) 45vw, 100vw',
+            loading: 'eager',
+            fetchpriority: 'high',
+            alt: section.settings.image.alt
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+      <span class="hero-split__ball" aria-hidden="true"></span>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero (image à côté)",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Surtitre", "default": "Raquettes · Grips · Sacs" },
+    { "type": "inline_richtext", "id": "heading", "label": "Titre (mettre en italique le mot à surligner en jaune)", "default": "Conçu pour le <em>prochain point.</em>" },
+    { "type": "text", "id": "text", "label": "Texte" },
+    { "type": "text", "id": "button_label_1", "label": "Bouton 1", "default": "Voir les raquettes" },
+    { "type": "url", "id": "button_link_1", "label": "Lien bouton 1" },
+    { "type": "text", "id": "button_label_2", "label": "Bouton 2", "default": "Tout découvrir" },
+    { "type": "url", "id": "button_link_2", "label": "Lien bouton 2" }
+  ],
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "Avantage",
+      "limit": 4,
+      "settings": [{ "type": "text", "id": "text", "label": "Texte", "default": "Livraison mondiale" }]
+    }
+  ],
+  "presets": [{ "name": "Hero (image à côté)" }]
+}
+{% endschema %}

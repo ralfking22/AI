@@ -1,0 +1,108 @@
+{%- liquid
+  assign rd_show = true
+  if section.settings.show_on != blank and collection
+    assign rd_handles = section.settings.show_on | remove: ' ' | split: ','
+    unless rd_handles contains collection.handle
+      assign rd_show = false
+    endunless
+  endif
+-%}
+{%- if rd_show -%}
+{%- style -%}
+  #promo-{{ section.id }} {
+    padding: 1.6rem 0 4rem;
+  }
+  #promo-{{ section.id }} .promo__box {
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    background: var(--rd-ball);
+    color: var(--rd-navy);
+    border-radius: 2.4rem;
+    padding: 2.8rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #promo-{{ section.id }} .promo__box::after {
+    content: '';
+    position: absolute;
+    width: 22rem;
+    height: 22rem;
+    border-radius: 50%;
+    border: 0.3rem solid rgba(0, 31, 84, 0.12);
+    right: -6rem;
+    top: -8rem;
+  }
+  #promo-{{ section.id }} .promo__eyebrow {
+    margin: 0 0 0.6rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  #promo-{{ section.id }} h2 {
+    margin: 0;
+    color: var(--rd-navy);
+    font-size: clamp(2.4rem, 3.4vw, 3.4rem);
+    line-height: 1.15;
+  }
+  #promo-{{ section.id }} p.promo__text {
+    margin: 0.8rem 0 0;
+    font-size: 1.5rem;
+    color: rgba(0, 31, 84, 0.8);
+  }
+  #promo-{{ section.id }} .promo__cta {
+    position: relative;
+    z-index: 1;
+    justify-self: start;
+    background: var(--rd-navy);
+    color: #fff;
+    border-radius: 99rem;
+    padding: 1.4rem 2.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  #promo-{{ section.id }} .promo__cta:hover {
+    background: var(--rd-navy-deep);
+  }
+  @media screen and (min-width: 750px) {
+    #promo-{{ section.id }} .promo__box {
+      grid-template-columns: 1fr auto;
+      padding: 3.6rem 4.8rem;
+    }
+  }
+{%- endstyle -%}
+
+<section id="promo-{{ section.id }}" class="promo-band">
+  <div class="page-width">
+    <div class="promo__box">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="promo__eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+        <h2>{{ section.settings.heading | escape }}</h2>
+        {%- if section.settings.text != blank -%}<p class="promo__text">{{ section.settings.text | escape }}</p>{%- endif -%}
+      </div>
+      {%- if section.settings.button_label != blank -%}
+        <a class="promo__cta" href="{{ section.settings.button_link | default: '/collections/all' }}">{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Promo band",
+  "tag": "div",
+  "class": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Free shipping tip" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Add overgrips, unlock free shipping." },
+    { "type": "text", "id": "text", "label": "Text" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop overgrips" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "show_on", "label": "On collection pages, show only on (handles, comma-separated)" }
+  ],
+  "presets": [{ "name": "Promo band" }]
+}
+{% endschema %}
