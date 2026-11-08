@@ -1,51 +1,3 @@
-{%- style -%}
-  #trust-{{ section.id }} {
-    border-bottom: 0.1rem solid rgba(var(--color-foreground), 0.08);
-  }
-  #trust-{{ section.id }} .trust__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 3.2rem 0;
-  }
-  #trust-{{ section.id }} .trust__item {
-    display: flex;
-    gap: 1.6rem;
-    align-items: flex-start;
-    color: inherit;
-    text-decoration: none;
-  }
-  #trust-{{ section.id }} .trust__icon {
-    flex: none;
-    width: 4.8rem;
-    height: 4.8rem;
-    border-radius: 1.4rem;
-    background: var(--rd-mist);
-    color: var(--rd-navy);
-    display: grid;
-    place-items: center;
-  }
-  #trust-{{ section.id }} .trust__title {
-    font-weight: 700;
-    margin: 0 0 0.2rem;
-    font-size: 1.6rem;
-    color: rgb(var(--color-foreground));
-  }
-  #trust-{{ section.id }} .trust__text {
-    margin: 0;
-    font-size: 1.4rem;
-    line-height: 1.5;
-    color: rgba(var(--color-foreground), 0.7);
-  }
-  @media screen and (min-width: 750px) {
-    #trust-{{ section.id }} .trust__grid {
-      grid-template-columns: repeat({{ section.blocks.size | at_least: 1 }}, 1fr);
-      gap: 3.2rem;
-      padding: 4rem 0;
-    }
-  }
-{%- endstyle -%}
-
 <section id="trust-{{ section.id }}" class="trust-strip">
   <div class="page-width trust__grid">
     {%- for block in section.blocks -%}
@@ -54,11 +6,17 @@
       {%- else -%}
         <div class="trust__item" {{ block.shopify_attributes }}>
       {%- endif -%}
-      <span class="trust__icon">{% render 'material-icon', icon: block.settings.icon %}</span>
-      <span>
+      <span class="trust__icon"><svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+{% case block.settings.icon %}
+{% when 'local_shipping' %}<path d="M3 7h17v15H3zM20 12h5l4 5v5h-9"/><circle cx="9" cy="24" r="3"/><circle cx="24" cy="24" r="3"/>
+{% when 'autorenew' %}<path d="M26 12A11 11 0 0 0 6 8l-3 4m0-7v7h7M6 20a11 11 0 0 0 20 4l3-4m0 7v-7h-7"/>
+{% when 'lock' %}<rect x="6" y="13" width="20" height="15" rx="2"/><path d="M10 13V9a6 6 0 0 1 12 0v4M16 19v4"/>
+{% else %}<path d="M5 5h22v17H13l-8 6zM10 11h12M10 16h8"/>
+{% endcase %}</svg></span>
+      <div>
         <p class="trust__title">{{ block.settings.title | escape }}</p>
         <p class="trust__text">{{ block.settings.text | escape }}</p>
-      </span>
+      </div>
       {%- if block.settings.link != blank -%}</a>{%- else -%}</div>{%- endif -%}
     {%- endfor -%}
   </div>
@@ -85,3 +43,4 @@
   "presets": [{ "name": "Bandeau de confiance" }]
 }
 {% endschema %}
+

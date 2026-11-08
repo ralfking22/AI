@@ -36,6 +36,10 @@
     {%- endif -%}
     <script src="{{ 'secondary.js' | asset_url }}" defer="defer" data-defer="true"></script> 
     <script src="{{ 'zendrop.js' | asset_url }}" defer="defer" data-defer="true"></script> 
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ 'zendrop.css' | asset_url | stylesheet_tag }}
+    {{ 'redesign.css' | asset_url | stylesheet_tag }}
+
     {{ content_for_header }}
 
     {%- liquid
@@ -252,9 +256,7 @@
       }
     {% endstyle %}
 
-    {{ 'base.css' | asset_url | stylesheet_tag }}
-    {{ 'zendrop.css' | asset_url | stylesheet_tag }}
-    {{ 'redesign.css' | asset_url | stylesheet_tag }}
+
 
     {%- unless settings.type_body_font.system? -%}
       <link rel="preload" as="font" href="{{ settings.type_body_font | font_url }}" type="font/woff2" crossorigin>
@@ -400,3 +402,4 @@
     {%- endif -%}
   </body>
 </html>
+
